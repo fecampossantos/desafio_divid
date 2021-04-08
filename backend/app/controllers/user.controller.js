@@ -49,7 +49,8 @@ exports.check = (req, res) => {
       } else {
         // if it doesnt, create a new user and repos to it
         axios
-        .get('https://api.github.com/users/'+username+'/repos')
+        // .get('https://api.github.com/users/'+username+'/repos')
+        .get('https://api.github.com/orgs/'+username+'/repos')
         .then(({data}) => {
             const repos = data.slice(0,10)
             const dataUser = repos[0].owner

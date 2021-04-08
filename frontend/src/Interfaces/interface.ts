@@ -6,3 +6,10 @@ export interface RepoModel {
     },
     repo_id: number
 }
+
+export interface RepoInfos {
+    name: string,
+    url: string,
+    languages: string,
+    full_name: string
+}

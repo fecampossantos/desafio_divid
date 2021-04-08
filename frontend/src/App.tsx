@@ -1,16 +1,17 @@
 import React, {FC, ChangeEvent, useState} from 'react';
 import './App.css';
-import { RepoModel } from './Interfaces/interface'
+import { RepoModel, RepoInfos } from './Interfaces/interface'
 import axios from 'axios'
 import Button from './models/Button/Button';
 import Header from './models/Header/Header';
-import { collapseTextChangeRangesAcrossMultipleVersions } from 'typescript';
+import { collapseTextChangeRangesAcrossMultipleVersions, setSourceMapRange } from 'typescript';
 
 
 const App: FC = () => {
   const [userName, setUserName] = useState<string>('')
   const [reposList, setReposList] = useState<RepoModel[] | null>();
-  const [repoInfos, setRepoinfos] = useState();
+  const [repoInfos, setRepoinfos] = useState<RepoInfos>();
+  const [showDiv, setShowDiv] = useState<boolean>();
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setUserName(event.target.value);
@@ -21,7 +22,7 @@ const App: FC = () => {
     .post('http://localhost:8000/user/check', {'login': username})
     .then(({data}) => {
       setReposList(data)
-      setRepoinfos(null)
+      setShowDiv(false)
     })
 
     setReposList(reposList);
@@ -33,6 +34,7 @@ const App: FC = () => {
     .get('http://localhost:8000/repository/'+id)
     .then(({data}) => {
       setRepoinfos(data[0])
+      setShowDiv(true)
     })
   }
 
@@ -53,11 +55,11 @@ const App: FC = () => {
             })}</ul>
         </div> }
 
-        {repoInfos && <div className="divBorder">
-        <span className="repoTitle">{repoInfos.name}</span><br/>
-        <a href={repoInfos.url}>{repoInfos.full_name}</a><br/>
+        {showDiv && <div className="divBorder">
+        <span className="repoTitle">{repoInfos?.name}</span><br/>
+        <a href={repoInfos?.url}>{repoInfos?.full_name}</a><br/>
         <br/>
-        <span className="info">Coded in&nbsp;<span className="codeLanguage"> {repoInfos.languages}</span></span><br/>
+        <span className="info">Coded in&nbsp;<span className="codeLanguage"> {repoInfos?.languages}</span></span><br/>
         
 
         </div> }
